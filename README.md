@@ -4,8 +4,12 @@ A Django REST Framework backend for a healthcare application: JWT-authenticated 
 
 [![CI](https://github.com/AshrafAhmed9/healthcare-backend-api/actions/workflows/ci.yml/badge.svg)](https://github.com/AshrafAhmed9/healthcare-backend-api/actions/workflows/ci.yml)
 
-**Live API:** _add your deployed URL here_
-**Live Swagger docs:** _add your deployed URL + `/api/docs/` here_
+**Live API:** https://healthcare-backend-api-0y2l.onrender.com/api/
+**Live Swagger docs:** https://healthcare-backend-api-0y2l.onrender.com/api/docs/
+
+> Hosted on Render's free tier — the first request after idle may take ~30s to cold-start.
+
+Pre-seeded demo login: `livetest@test.com` / `StrongPass123!` (2 doctors, 2 patients, 2 mappings already created).
 
 ## Stack
 
