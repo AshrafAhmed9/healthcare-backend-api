@@ -1,0 +1,187 @@
+{
+  "info": {
+    "name": "Healthcare Backend API",
+    "description": "Auth, patients, doctors, and patient-doctor mappings. Run Login first — it saves the access token to {{access_token}} for every other request.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000/api" },
+    { "key": "access_token", "value": "" },
+    { "key": "patient_id", "value": "" },
+    { "key": "doctor_id", "value": "" },
+    { "key": "mapping_id", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"alice@test.com\",\"name\":\"Alice\",\"password\":\"StrongPass123!\"}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('access_token', data.access);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"alice@test.com\",\"password\":\"StrongPass123!\"}"
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": { "method": "GET", "url": "{{base_url}}/auth/me/" }
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "Create Doctor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('doctor_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/doctors/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Dr Smith\",\"specialization\":\"CARDIOLOGY\",\"email\":\"drsmith@test.com\",\"years_of_experience\":10}"
+            }
+          }
+        },
+        { "name": "List Doctors", "request": { "method": "GET", "url": "{{base_url}}/doctors/" } },
+        { "name": "Get Doctor", "request": { "method": "GET", "url": "{{base_url}}/doctors/{{doctor_id}}/" } },
+        {
+          "name": "Update Doctor",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/doctors/{{doctor_id}}/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Dr Smith Jr\",\"specialization\":\"CARDIOLOGY\",\"email\":\"drsmith@test.com\",\"years_of_experience\":11}"
+            }
+          }
+        },
+        { "name": "Delete Doctor", "request": { "method": "DELETE", "url": "{{base_url}}/doctors/{{doctor_id}}/" } }
+      ]
+    },
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "Create Patient",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('patient_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/patients/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"John Doe\",\"date_of_birth\":\"1990-01-01\",\"gender\":\"M\"}"
+            }
+          }
+        },
+        { "name": "List Patients", "request": { "method": "GET", "url": "{{base_url}}/patients/" } },
+        { "name": "Get Patient", "request": { "method": "GET", "url": "{{base_url}}/patients/{{patient_id}}/" } },
+        {
+          "name": "Update Patient",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/patients/{{patient_id}}/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"John Doe Jr\",\"date_of_birth\":\"1990-01-01\",\"gender\":\"M\"}"
+            }
+          }
+        },
+        { "name": "Delete Patient", "request": { "method": "DELETE", "url": "{{base_url}}/patients/{{patient_id}}/" } }
+      ]
+    },
+    {
+      "name": "Mappings",
+      "item": [
+        {
+          "name": "Create Mapping",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('mapping_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/mappings/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"patient\":{{patient_id}},\"doctor\":{{doctor_id}}}"
+            }
+          }
+        },
+        { "name": "List Mappings", "request": { "method": "GET", "url": "{{base_url}}/mappings/" } },
+        {
+          "name": "Get Doctors for Patient",
+          "request": { "method": "GET", "url": "{{base_url}}/mappings/{{patient_id}}/" }
+        },
+        {
+          "name": "Delete Mapping",
+          "request": { "method": "DELETE", "url": "{{base_url}}/mappings/{{mapping_id}}/" }
+        }
+      ]
+    }
+  ]
+}
