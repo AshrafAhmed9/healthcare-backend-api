@@ -12,6 +12,14 @@ A Django REST Framework backend for a healthcare application: JWT-authenticated 
 
 Pre-seeded demo login: `livetest@test.com` / `StrongPass123!` (2 doctors, 2 patients, 2 mappings already created).
 
+Or run the full flow yourself against the live API in one command:
+
+```bash
+./scripts/demo_walkthrough.sh
+```
+
+It registers a fresh user, creates a doctor and patient, assigns them, queries the mapping, then proves the security rules: no token → `401`, a second user reading your patient → `404`, a second user trying to assign a doctor to your patient → `400`.
+
 ## Stack
 
 Django 5.2 · Django REST Framework · PostgreSQL · `djangorestframework-simplejwt` · `drf-spectacular` (OpenAPI/Swagger) · pytest · Docker
