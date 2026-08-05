@@ -1,3 +1,7 @@
+# The project's central settings file. Almost every value below is read
+# from environment variables (via config(...)) instead of being hard-coded,
+# so secrets like SECRET_KEY and the database password never live in the code.
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -9,6 +13,7 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 
+# Every app Django/DRF should load, including the four apps this project adds.
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -55,6 +60,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+# Database connection details - all come from environment variables, so the
+# same code connects to a different database in local dev, CI, and production
+# without any code changes.
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -66,8 +74,11 @@ DATABASES = {
     }
 }
 
+# Tells Django to use the custom User model (accounts/models.py) instead of
+# its default one, so login works by email rather than a username.
 AUTH_USER_MODEL = "accounts.User"
 
+# Rules a new password must pass (not too short, not too common, etc.).
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -86,20 +97,26 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Default behavior for every API endpoint in the project, unless a view
+# specifically overrides it.
 REST_FRAMEWORK = {
+    # Every request's login token is checked using JWT.
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    # By default, every endpoint requires being logged in - safer to start
+    # locked down and open specific endpoints up (like register/login).
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 20,
-    "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "PAGE_SIZE": 20,  # how many results per page in a list endpoint
+    "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",  # see exceptions.py
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",  # powers the Swagger docs
 }
 
+# How long a login token stays valid.
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),  # the day-to-day token, short-lived
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # used to get a new access token
     "ROTATE_REFRESH_TOKENS": True,
 }
 

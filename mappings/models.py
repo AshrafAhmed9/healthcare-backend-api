@@ -1,3 +1,6 @@
+# This file defines the table that links a patient to a doctor.
+# Think of each row as a sticky note: "this patient sees this doctor."
+
 from django.db import models
 
 from doctors.models import Doctor
@@ -13,6 +16,8 @@ class PatientDoctorMapping(models.Model):
     class Meta:
         ordering = ["-created_at"]
         constraints = [
+            # The database itself refuses a duplicate - the same doctor can't
+            # be assigned to the same patient twice, even by accident.
             models.UniqueConstraint(fields=["patient", "doctor"], name="unique_patient_doctor")
         ]
 

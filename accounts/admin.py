@@ -1,3 +1,6 @@
+# Makes the User table visible and editable in Django's built-in admin site
+# (the /admin/ page), mainly useful for the developer, not end users.
+
 from django.contrib import admin
 
 from accounts.models import User

@@ -1,3 +1,8 @@
+# A one-off script that fills an empty database with sample data (one demo
+# user, a few doctors and patients, and some mappings between them) so the
+# API isn't empty the first time someone tries it. Run with:
+#   python manage.py seed_demo
+
 from datetime import date
 
 from django.core.management.base import BaseCommand
@@ -12,6 +17,8 @@ class Command(BaseCommand):
     help = "Seed the database with a demo user, doctors, patients, and mappings."
 
     def handle(self, *args, **options):
+        # get_or_create everywhere below means this script is safe to run more
+        # than once - it won't create duplicates if the demo data already exists.
         user, created = User.objects.get_or_create(
             email="demo@healthcare.dev", defaults={"name": "Demo User"}
         )

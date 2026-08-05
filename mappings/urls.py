@@ -1,3 +1,5 @@
+# Maps URLs under /api/mappings/ to the two views above.
+
 from django.urls import path
 
 from mappings.views import MappingDetailView, MappingListCreateView

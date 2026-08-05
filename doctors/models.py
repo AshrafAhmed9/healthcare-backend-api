@@ -1,3 +1,6 @@
+# This file defines the Doctor table. Unlike patients, doctors aren't owned
+# by one user - every logged-in user can see and manage the same shared list.
+
 from django.db import models
 
 
@@ -14,7 +17,7 @@ class Doctor(models.Model):
 
     name = models.CharField(max_length=150)
     specialization = models.CharField(max_length=20, choices=Specialization.choices)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True)  # no two doctors can share an email
     phone = models.CharField(max_length=20, blank=True)
     years_of_experience = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=True)

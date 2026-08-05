@@ -1,3 +1,5 @@
+# Makes doctors visible in Django's built-in admin site, for the developer.
+
 from django.contrib import admin
 
 from doctors.models import Doctor

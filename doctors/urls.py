@@ -1,3 +1,5 @@
+# Auto-generates the 5 doctor URLs from DoctorViewSet.
+
 from rest_framework.routers import DefaultRouter
 
 from doctors.views import DoctorViewSet
